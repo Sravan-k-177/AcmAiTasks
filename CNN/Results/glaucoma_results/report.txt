@@ -1,0 +1,38 @@
+
+GLAUCOMA DETECTION USING CNN - REPORT
+Generated: 2026-03-07 09:13
+
+1. PROBLEM STATEMENT
+Glaucoma is the second leading cause of irreversible blindness. This project
+builds a binary CNN classifier (NRG vs RG) from fundus images.
+
+2. DATASET
+Source  : Kaggle - EyePACS-AIROGS-light-V2
+Classes : NRG - Non-Referable Glaucoma (0), RG - Referable Glaucoma (1)
+Resize  : 224x224, Normalize: /255
+Augment : flip, rotate, brightness, contrast, saturation
+Split   : Pre-split by dataset (train / validation / test)
+
+3. ARCHITECTURES
+Baseline: Input->Conv(32)->Pool->Conv(64)->Pool->Flatten->Dense(128)->Sigmoid
+Custom  : 4x[Conv*2+BN+ReLU->Pool->Dropout]->GAP->Dense(256)+BN+Dropout->Sigmoid
+
+4. RESULTS
+Metric             Baseline       Custom
+────────────────────────────────────────
+Accuracy             0.8013       0.8403
+Precision            0.8005       0.8994
+Recall               0.8026       0.7662
+F1-Score             0.8016       0.8275
+
+5. ERROR ANALYSIS
+False Negatives (RG->NRG) are the most dangerous error type.
+Common causes: subtle disc changes, myopic or tilted discs.
+
+6. GRADCAM
+Heatmaps confirm the model focuses on the optic disc and cup region,
+which is clinically correct (cup-to-disc ratio is the key biomarker).
+
+7. CONCLUSION
+Custom CNN outperforms baseline via BatchNorm, Dropout, and deeper features.
+Future work: transfer learning (EfficientNet/ResNet), larger datasets.
